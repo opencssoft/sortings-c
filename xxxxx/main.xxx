@@ -1,0 +1,169 @@
+//
+//  main.c
+//  sorting
+//
+//  Created by FangChen on 2019/10/31.
+//  Copyright © 2019 FangChen. All rights reserved.
+//
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define N 1000
+
+int bubblesort(int a[],int count)
+{
+    int i,j,n,t;
+    
+    n = count;
+    
+    printf("\n\n");
+    
+    for(j=0; j<n; ++j)
+    {
+        printf("%-5d ",a[j]);
+    }
+    printf("\n\n");
+    
+    for (i =0; i<n-1; ++i)
+    {
+        for(j =0; j<n-i-1;++j)
+        {
+            if(a[j]>a[j+1])
+            {
+                t = a[j];
+                a[j] = a[j+1];
+                a[j+1] = t;
+            }
+        }
+
+        printf("round %d : ",i);
+        
+        for(j=0; j<n; ++j)
+        {
+            printf("%-5d ",a[j]);
+        }
+
+        printf("\n\n");
+    }
+    
+    return 0;
+}
+
+int quicksort(int a[], int begin,int end)
+{
+    int ikey = 0;
+    int i = 0;
+    int j =0;
+    int temp = 0;
+    int count = end - begin + 1;
+    int lowercount = begin;
+    
+    if (count <= 0)
+        return 0;
+    
+    ikey = a[begin];
+    
+    for(i= begin; i <= end; i++)
+    {
+        if(ikey > a[i])
+        {
+            temp = a[i];
+            
+            for(j = i;j > lowercount; j--)
+            {
+                a[j] =a[j-1];
+            }
+            a[lowercount] = temp;
+            lowercount++;
+        }
+    }
+    
+    for(j=begin; j<=end; j++)
+    {
+        printf("%d:%-5d ",j,a[j]);
+    }
+
+    printf("\n\n");
+    
+    if( lowercount > 1)
+    {
+        quicksort(a, begin, lowercount - 1);
+    }
+    
+    if(lowercount < end - 1)
+    {
+        quicksort(a, lowercount+1, end);
+    }
+    
+    return 0;
+}
+
+
+int main()
+{
+        int counter = 0;
+        int a[1001];
+        char char2num[100] = {'\0'};
+
+        int n, i, j;
+        printf("read numbers from numbers.txt and sort them!\n");
+        //scanf("%d\n",&n);
+
+ /*       for(i = 0; i< n; ++i)
+        {
+            scanf("%d", a+i);
+        }*/
+
+        FILE *fp;
+    
+        char str[N + 1];
+        //判断文件是否打开失败
+        if ( (fp = fopen("numbers.txt", "rt")) == NULL ) {
+            puts("Fail to open file!");
+            exit(0);
+        }
+        //循环读取文件的每一行数据
+        j=0;
+
+        while( fgets(str, N, fp) != NULL )
+        {
+
+            for(i = 0; i < N;i++)
+            {
+                char chartemp = str[i];
+                if(str[i] == '\0')
+                    break;
+                
+                if(chartemp >= '0' && chartemp <= '9')
+                {
+                    char2num[counter] = chartemp;
+                    counter++;
+                }
+                else if(counter > 0)
+                {
+                    char2num[counter] ='\0';
+                    a[j] = atoi(char2num);
+                    //printf("j--%d:%-5d ",j,a[j]);
+                    j++;
+                    counter = 0;
+                }
+            }
+
+            printf("%s", str);
+        }
+       
+        //操作结束后关闭文件
+    fclose(fp);
+    printf("\n\n");
+    
+    //
+    n = j;
+    printf("begin  quicksort ......!\n");
+    quicksort(a,0,n-1);
+    printf("begin  bubblesort ......!\n");
+    bubblesort(a,n);
+    return 0;
+}
+
+
